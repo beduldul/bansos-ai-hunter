@@ -63,49 +63,63 @@ class BansosAIScraper:
         matches = re.findall(API_KEY_REGEX, text)
         return list(set(matches))
 
-    async def search_ddg(self, query: str) -> List[RelayTarget]:
-        """Melakukan pencarian melalui DuckDuckGo Search."""
+    async def search_social_media(self, platform_name: str, site_query: str, keywords: List[str]) -> List[RelayTarget]:
+        """Memindai spesifik platform sosial media / forum (Threads, Facebook, Reddit, Linux.do, dll)."""
         targets: List[RelayTarget] = []
-        logger.info(f"🔎 Mencari sumber dengan query: [cyan]'{query}'[/cyan]")
-        
-        try:
-            ddgs = DDGS()
-            results = list(ddgs.text(query, max_results=self.max_results_per_query))
+        for kw in keywords[:4]:  # Ambil kata kunci utama untuk tiap platform
+            combined_query = f"{site_query} {kw}"
+            logger.info(f"📱 Memindai Platform [bold yellow]{platform_name}[/bold yellow] dengan query: [cyan]'{combined_query}'[/cyan]")
             
-            for res in results:
-                href = res.get("href", "")
-                title = res.get("title", "")
-                snippet = res.get("body", "")
+            try:
+                ddgs = DDGS()
+                results = list(ddgs.text(combined_query, max_results=self.max_results_per_query))
                 
-                if not href or self.is_blacklisted(href):
-                    continue
+                for res in results:
+                    href = res.get("href", "")
+                    title = res.get("title", "")
+                    snippet = res.get("body", "")
                     
-                base_url = self.clean_base_url(href)
-                if not base_url or base_url in self.seen_urls:
-                    continue
+                    if not href:
+                        continue
+                        
+                    # 1. Ekstrak Base URL Relay dari dalam postingan / snippet sosmed
+                    urls_in_post = re.findall(URL_REGEX, f"{title} {snippet}")
+                    extracted_keys = self.extract_keys_from_text(f"{title} {snippet}")
+                    api_key = extracted_keys[0] if extracted_keys else None
                     
-                self.seen_urls.add(base_url)
+                    # Jika postingan menyebutkan URL relay tertentu (misal: https://api.xxx.com)
+                    relay_url_found = None
+                    for u in urls_in_post:
+                        if not self.is_blacklisted(u) and "site:" not in u:
+                            cleaned = self.clean_base_url(u)
+                            if cleaned and cleaned not in self.seen_urls:
+                                relay_url_found = cleaned
+                                break
+                    
+                    target_base = relay_url_found if relay_url_found else self.clean_base_url(href)
+                    if not target_base or target_base in self.seen_urls:
+                        continue
+                        
+                    self.seen_urls.add(target_base)
+                    
+                    targets.append(RelayTarget(
+                        url=href,
+                        base_url=target_base,
+                        api_key=api_key,
+                        source=f"Social Media ({platform_name})",
+                        title=title,
+                        snippet=snippet,
+                        matched_keyword=combined_query
+                    ))
+            except Exception as e:
+                logger.warning(f"⚠️ Gagal memindai {platform_name} query '{combined_query}': {e}")
                 
-                # Ekstrak potensi API key dari judul atau snippet
-                extracted_keys = self.extract_keys_from_text(f"{title} {snippet}")
-                api_key = extracted_keys[0] if extracted_keys else None
-                
-                targets.append(RelayTarget(
-                    url=href,
-                    base_url=base_url,
-                    api_key=api_key,
-                    source="DuckDuckGo Search",
-                    title=title,
-                    snippet=snippet,
-                    matched_keyword=query
-                ))
-        except Exception as e:
-            logger.warning(f"⚠️ Gagal mencari query '{query}': {e}")
-            
         return targets
 
-    async def scrape_all(self, include_chinese: bool = True, custom_keywords: List[str] = None) -> List[RelayTarget]:
-        """Menjalankan proses scraping komprehensif berdasarkan kata kunci terkonfigurasi."""
+    async def scrape_all(self, include_chinese: bool = True, custom_keywords: List[str] = None, social_only: bool = False) -> List[RelayTarget]:
+        """Menjalankan proses scraping komprehensif dari Sosial Media, Forum, dan Mesin Pencari."""
+        from bansos_ai.config import TARGET_SOCIAL_PLATFORMS
+        
         keywords = []
         if custom_keywords:
             keywords.extend(custom_keywords)
@@ -116,9 +130,17 @@ class BansosAIScraper:
 
         all_targets: List[RelayTarget] = []
         
-        for kw in keywords:
-            found = await self.search_ddg(kw)
-            all_targets.extend(found)
+        # 1. Scrape Khusus Sosmed & Forum (Threads, Facebook, Reddit, Linux.do, NodeSeek, Xiaohongshu)
+        for platform, site_q in TARGET_SOCIAL_PLATFORMS.items():
+            social_targets = await self.search_social_media(platform, site_q, keywords)
+            all_targets.extend(social_targets)
 
-        logger.info(f"✨ Total target unik berhasil dikumpulkan: [green]{len(all_targets)}[/green]")
+        # 2. General Web Scrape jika tidak social_only
+        if not social_only:
+            for kw in keywords[:5]:
+                found = await self.search_ddg(kw)
+                all_targets.extend(found)
+
+        logger.info(f"✨ Total target postingan & relay unik berhasil dikumpulkan: [green]{len(all_targets)}[/green]")
         return all_targets
+

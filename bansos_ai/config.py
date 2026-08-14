@@ -5,6 +5,20 @@ untuk pemindaian endpoint AI Relay ("AI中转站") dan kuota gratis.
 
 from typing import List, Dict
 
+# Platform Sosmed & Forum Target
+TARGET_SOCIAL_PLATFORMS: Dict[str, str] = {
+    "Reddit": "site:reddit.com",
+    "Threads": "site:threads.net",
+    "Facebook": "site:facebook.com",
+    "Twitter/X": "site:x.com",
+    "Linux.do": "site:linux.do",
+    "NodeSeek": "site:nodeseek.com",
+    "V2EX": "site:v2ex.com",
+    "Baidu Tieba": "site:tieba.baidu.com",
+    "Xiaohongshu": "site:xiaohongshu.com",
+    "QQ / Weixin Post": "site:mp.weixin.qq.com",
+}
+
 # Kata kunci pencarian spesifik (Mandarin, Indonesia, Inggris)
 CHINESE_KEYWORDS: List[str] = [
     "AI中转站",
@@ -15,17 +29,13 @@ CHINESE_KEYWORDS: List[str] = [
     "模型中转",
     "大模型API",
     "AI接口",
-    "充值",
-    "余额",
     "One-API 免费中转",
     "New-API 注册送",
     "Claude 3.5 Sonnet 免费API",
     "Claude 3.7 Sonnet 中转",
     "Claude Opus 免费中转",
-    "GPT-4o 免费额度",
     "DeepSeek R1 免费API",
     "O1 中转站 免费",
-    "Qwen Max 免费接口",
 ]
 
 GLOBAL_KEYWORDS: List[str] = [
@@ -33,36 +43,26 @@ GLOBAL_KEYWORDS: List[str] = [
     "free openai api relay",
     "free api key one-api",
     "free claude 3.5 sonnet api relay",
-    "free claude opus api key",
     "free deepseek r1 api relay",
     "free gpt-4o api relay",
-    "free o1 o3-mini api relay",
-    "new-api free trial quota",
     "shared openai api base url",
-    "flagship ai model free api proxy",
-]
-
-# Ekstraksi URL & Domain Relay yang Dikenal
-ONE_API_PATHS: List[str] = [
-    "/v1/models",
-    "/v1/chat/completions",
-    "/v1/user/self",
-    "/register",
-    "/login",
-    "/dashboard",
 ]
 
 # Pola Regex untuk Menemukan URL Base OpenAI-Compatible dan Key (sk-...)
 URL_REGEX: str = r'https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?::\d+)?(?:/[a-zA-Z0-9_.-]*)*/?'
 API_KEY_REGEX: str = r'sk-[a-zA-Z0-9]{32,64}'
 
-# Blacklist domain yang tidak relevan (Sosmed utama, e-commerce, dsb.)
+# Blacklist domain korporat/bantuan/dokumentasi yang bukan forum/sosmed/relay
 DOMAIN_BLACKLIST: List[str] = [
     "google.com", "bing.com", "duckduckgo.com", "baidu.com",
-    "youtube.com", "facebook.com", "instagram.com", "twitter.com",
-    "x.com", "wikipedia.org", "amazon.com", "taobao.com",
-    "github.com", "gist.github.com", "gitlab.com"
+    "youtube.com", "wikipedia.org", "amazon.com", "taobao.com",
+    "github.com", "help.aliyun.com", "cloud.tencent.com", "huaweicloud.com",
+    "docs.openai.com", "learn.microsoft.com", "support.google.com",
+    "w3schools.com", "developer.mozilla.org"
 ]
+
+
+
 
 # Daftar Model AI Tertinggi (Flagship & Top Tier) yang Diutamakan dalam Uji Ketersediaan
 TEST_MODELS: List[str] = [
