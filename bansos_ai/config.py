@@ -52,14 +52,24 @@ GLOBAL_KEYWORDS: List[str] = [
 URL_REGEX: str = r'https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?::\d+)?(?:/[a-zA-Z0-9_.-]*)*/?'
 API_KEY_REGEX: str = r'sk-[a-zA-Z0-9]{32,64}'
 
-# Blacklist domain korporat/bantuan/dokumentasi yang bukan forum/sosmed/relay
+# Blacklist domain korporat/bantuan/dokumentasi/sosmed/search engine (bukan relay API)
 DOMAIN_BLACKLIST: List[str] = [
-    "google.com", "bing.com", "duckduckgo.com", "baidu.com",
-    "youtube.com", "wikipedia.org", "amazon.com", "taobao.com",
-    "github.com", "help.aliyun.com", "cloud.tencent.com", "huaweicloud.com",
+    "google.com", "bing.com", "duckduckgo.com", "baidu.com", "tieba.baidu.com",
+    "yahoo.com", "yandex.com", "startpage.com", "mojeek.com", "brave.com",
+    "youtube.com", "wikipedia.org", "grokipedia.com", "amazon.com", "taobao.com",
+    "github.com", "gitlab.com", "microsoft.com", "openai.com", "anthropic.com",
+    "help.aliyun.com", "cloud.tencent.com", "huaweicloud.com",
     "docs.openai.com", "learn.microsoft.com", "support.google.com",
-    "w3schools.com", "developer.mozilla.org"
+    "w3schools.com", "developer.mozilla.org",
+    # Platform Sosmed & Forum (Tempat mencari, bukan endpoint API itu sendiri)
+    "reddit.com", "www.reddit.com", "x.com", "twitter.com", "facebook.com", "www.facebook.com",
+    "threads.net", "www.threads.net", "linux.do", "www.linux.do",
+    "nodeseek.com", "www.nodeseek.com", "v2ex.com", "www.v2ex.com",
+    "xiaohongshu.com", "open.xiaohongshu.com", "ad-market.xiaohongshu.com", "e.xiaohongshu.com",
+    "job.xiaohongshu.com", "beian.xiaohongshu.com", "security.xiaohongshu.com", "miniapp.xiaohongshu.com",
+    "qq.com", "weixin.qq.com", "mp.weixin.qq.com"
 ]
+
 
 
 

@@ -64,11 +64,11 @@ class BansosAIScraper:
         return list(set(matches))
 
     async def search_social_media(self, platform_name: str, site_query: str, keywords: List[str]) -> List[RelayTarget]:
-        """Memindai spesifik platform sosial media / forum (Threads, Facebook, Reddit, Linux.do, dll)."""
+        """Memindai postingan sosial media / forum (Threads, Facebook, Reddit, Linux.do, dll) untuk mengekstrak URL Relay & Key pihak ketiga."""
         targets: List[RelayTarget] = []
         for kw in keywords[:4]:  # Ambil kata kunci utama untuk tiap platform
             combined_query = f"{site_query} {kw}"
-            logger.info(f"📱 Memindai Platform [bold yellow]{platform_name}[/bold yellow] dengan query: [cyan]'{combined_query}'[/cyan]")
+            logger.info(f"📱 Memindai Postingan [bold yellow]{platform_name}[/bold yellow] dengan query: [cyan]'{combined_query}'[/cyan]")
             
             try:
                 ddgs = DDGS()
@@ -82,29 +82,29 @@ class BansosAIScraper:
                     if not href:
                         continue
                         
-                    # 1. Ekstrak Base URL Relay dari dalam postingan / snippet sosmed
+                    # 1. Ekstrak URL Relay pihak ketiga dari dalam judul/postingan sosmed
                     urls_in_post = re.findall(URL_REGEX, f"{title} {snippet}")
                     extracted_keys = self.extract_keys_from_text(f"{title} {snippet}")
                     api_key = extracted_keys[0] if extracted_keys else None
                     
-                    # Jika postingan menyebutkan URL relay tertentu (misal: https://api.xxx.com)
+                    # Cari URL relay pihak ketiga (bukan domain sosmed itu sendiri)
                     relay_url_found = None
                     for u in urls_in_post:
-                        if not self.is_blacklisted(u) and "site:" not in u:
+                        if not self.is_blacklisted(u):
                             cleaned = self.clean_base_url(u)
-                            if cleaned and cleaned not in self.seen_urls:
+                            if cleaned and not self.is_blacklisted(cleaned) and cleaned not in self.seen_urls:
                                 relay_url_found = cleaned
                                 break
                     
-                    target_base = relay_url_found if relay_url_found else self.clean_base_url(href)
-                    if not target_base or target_base in self.seen_urls:
+                    # PENTING: Hanya simpan jika ditemukan URL relay pihak ketiga non-blacklist
+                    if not relay_url_found:
                         continue
                         
-                    self.seen_urls.add(target_base)
+                    self.seen_urls.add(relay_url_found)
                     
                     targets.append(RelayTarget(
-                        url=href,
-                        base_url=target_base,
+                        url=href,  # URL postingan asal sosmed
+                        base_url=relay_url_found,  # URL API Relay yang dipromosikan
                         api_key=api_key,
                         source=f"Social Media ({platform_name})",
                         title=title,
@@ -115,6 +115,7 @@ class BansosAIScraper:
                 logger.warning(f"⚠️ Gagal memindai {platform_name} query '{combined_query}': {e}")
                 
         return targets
+
 
     async def search_ddg(self, query: str) -> List[RelayTarget]:
         """Melakukan pencarian umum melalui DuckDuckGo Search."""
