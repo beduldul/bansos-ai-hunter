@@ -5,7 +5,11 @@ Modul Pemindai & Harvester (Scraper) Multi-Source untuk Menemukan Target AI Rela
 import re
 import urllib.parse
 from typing import List, Set, Dict, Any
-from duckduckgo_search import DDGS
+try:
+    from ddgs import DDGS
+except ImportError:
+    from duckduckgo_search import DDGS
+
 
 from bansos_ai.config import (
     CHINESE_KEYWORDS,

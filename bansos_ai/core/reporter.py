@@ -24,10 +24,11 @@ class BansosAIReporter:
         table.add_column("No", style="dim", width=4)
         table.add_column("Base URL", style="cyan", no_wrap=True)
         table.add_column("Status Endpoint", style="bold")
-        table.add_column("Agent Status", style="bold center")
+        table.add_column("Agent Status", style="bold", justify="center")
         table.add_column("Latency", justify="right")
         table.add_column("API Key Extracted", style="yellow")
         table.add_column("Supported Models", style="green")
+
 
         for idx, res in enumerate(results, start=1):
             target = res.target
