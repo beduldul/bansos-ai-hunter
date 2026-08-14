@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bansos-ai-hunter"
+version = "1.0.0"
+description = "Alat pemindai, ekstraktor, dan validator otomatis untuk endpoint AI Relay (AI中转站) dan kunci API gratisan."
+readme = "README.md"
+authors = [
+    { name = "Bansos AI Contributor Community", email = "opensource@example.com" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.27.0",
+    "beautifulsoup4>=4.12.0",
+    "rich>=13.7.0",
+    "pydantic>=2.7.0",
+    "duckduckgo_search>=6.0.0",
+]
+
+[project.scripts]
+bansos-ai = "main:main"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
