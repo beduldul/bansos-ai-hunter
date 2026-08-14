@@ -157,8 +157,9 @@ class BansosAIScraper:
         return targets
 
     async def scrape_all(self, include_chinese: bool = True, custom_keywords: List[str] = None, social_only: bool = False) -> List[RelayTarget]:
-        """Menjalankan proses scraping komprehensif dari Sosial Media, Forum, dan Mesin Pencari."""
+        """Menjalankan pemindaian paralel super cepat untuk M4 Pro Multi-Threading."""
         from bansos_ai.config import TARGET_SOCIAL_PLATFORMS
+        import asyncio
         
         keywords = []
         if custom_keywords:
@@ -170,18 +171,26 @@ class BansosAIScraper:
 
         all_targets: List[RelayTarget] = []
         
-        # 1. Scrape Khusus Sosmed & Forum (Threads, Facebook, Reddit, Linux.do, NodeSeek, Xiaohongshu)
-        for platform, site_q in TARGET_SOCIAL_PLATFORMS.items():
-            social_targets = await self.search_social_media(platform, site_q, keywords)
-            all_targets.extend(social_targets)
-
-        # 2. General Web Scrape jika tidak social_only
+        # 1. Menjalankan Pemindaian Platform Sosmed Secara Paralel (Asyncio Gather)
+        logger.info(f"⚡ Memulai pemindaian paralel M4 Pro untuk [bold cyan]{len(TARGET_SOCIAL_PLATFORMS)}[/bold cyan] platform sosmed & forum...")
+        social_tasks = [
+            self.search_social_media(platform, site_q, keywords)
+            for platform, site_q in TARGET_SOCIAL_PLATFORMS.items()
+        ]
+        
+        # 2. General Web tasks jika tidak social_only
         if not social_only:
-            for kw in keywords[:3]:
-                found = await self.search_ddg(kw)
-                all_targets.extend(found)
+            social_tasks.extend([self.search_ddg(kw) for kw in keywords[:2]])
+
+        # Eksekusi paralel simultan
+        results_lists = await asyncio.gather(*social_tasks, return_exceptions=True)
+        
+        for res in results_lists:
+            if isinstance(res, list):
+                all_targets.extend(res)
 
         logger.info(f"✨ Total target postingan & relay unik berhasil dikumpulkan: [green]{len(all_targets)}[/green]")
         return all_targets
+
 
 

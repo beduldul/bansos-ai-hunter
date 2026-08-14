@@ -6,8 +6,8 @@ import httpx
 from typing import Dict, Optional
 from bansos_ai.config import DEFAULT_TIMEOUT, DEFAULT_USER_AGENT
 
-def get_async_client(timeout: float = DEFAULT_TIMEOUT, headers: Optional[Dict[str, str]] = None) -> httpx.AsyncClient:
-    """Mengembalikan instance httpx.AsyncClient terkonfigurasi."""
+def get_async_client(timeout: float = 3.0, headers: Optional[Dict[str, str]] = None) -> httpx.AsyncClient:
+    """Mengembalikan instance httpx.AsyncClient berperforma tinggi untuk M4 Pro Multi-Threading."""
     default_headers = {
         "User-Agent": DEFAULT_USER_AGENT,
         "Accept": "application/json, text/html, */*",
@@ -18,7 +18,9 @@ def get_async_client(timeout: float = DEFAULT_TIMEOUT, headers: Optional[Dict[st
         
     return httpx.AsyncClient(
         headers=default_headers,
-        timeout=httpx.Timeout(timeout),
+        timeout=httpx.Timeout(timeout, connect=2.0),
+        limits=httpx.Limits(max_connections=200, max_keepalive_connections=50),
         follow_redirects=True,
-        verify=False  # Mengizinkan pengetesan self-signed cert jika ada relay khusus
+        verify=False
     )
+

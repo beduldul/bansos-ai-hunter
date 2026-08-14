@@ -86,10 +86,11 @@ TEST_MODELS: List[str] = [
 ]
 
 
-# Parameter Koneksi Network
-DEFAULT_TIMEOUT: float = 8.0
-MAX_CONCURRENT_TASKS: int = 15
+# Parameter Koneksi Network untuk M4 Pro High-Performance Concurrency
+DEFAULT_TIMEOUT: float = 3.0
+MAX_CONCURRENT_TASKS: int = 50
 DEFAULT_USER_AGENT: str = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
 )
+
