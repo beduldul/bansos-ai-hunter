@@ -116,6 +116,46 @@ class BansosAIScraper:
                 
         return targets
 
+    async def search_ddg(self, query: str) -> List[RelayTarget]:
+        """Melakukan pencarian umum melalui DuckDuckGo Search."""
+        targets: List[RelayTarget] = []
+        logger.info(f"🔎 Memindai Web Umum dengan query: [cyan]'{query}'[/cyan]")
+        
+        try:
+            ddgs = DDGS()
+            results = list(ddgs.text(query, max_results=self.max_results_per_query))
+            
+            for res in results:
+                href = res.get("href", "")
+                title = res.get("title", "")
+                snippet = res.get("body", "")
+                
+                if not href or self.is_blacklisted(href):
+                    continue
+                    
+                base_url = self.clean_base_url(href)
+                if not base_url or base_url in self.seen_urls:
+                    continue
+                    
+                self.seen_urls.add(base_url)
+                
+                extracted_keys = self.extract_keys_from_text(f"{title} {snippet}")
+                api_key = extracted_keys[0] if extracted_keys else None
+                
+                targets.append(RelayTarget(
+                    url=href,
+                    base_url=base_url,
+                    api_key=api_key,
+                    source="General Web Search",
+                    title=title,
+                    snippet=snippet,
+                    matched_keyword=query
+                ))
+        except Exception as e:
+            logger.warning(f"⚠️ Gagal memindai web query '{query}': {e}")
+            
+        return targets
+
     async def scrape_all(self, include_chinese: bool = True, custom_keywords: List[str] = None, social_only: bool = False) -> List[RelayTarget]:
         """Menjalankan proses scraping komprehensif dari Sosial Media, Forum, dan Mesin Pencari."""
         from bansos_ai.config import TARGET_SOCIAL_PLATFORMS
@@ -137,10 +177,11 @@ class BansosAIScraper:
 
         # 2. General Web Scrape jika tidak social_only
         if not social_only:
-            for kw in keywords[:5]:
+            for kw in keywords[:3]:
                 found = await self.search_ddg(kw)
                 all_targets.extend(found)
 
         logger.info(f"✨ Total target postingan & relay unik berhasil dikumpulkan: [green]{len(all_targets)}[/green]")
         return all_targets
+
 
