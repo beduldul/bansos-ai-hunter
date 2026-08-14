@@ -262,6 +262,7 @@ class BansosAIReporter:
             border: 1px solid #4338ca;
         }}
 
+
         .tag {{
             background: #092635;
             color: #9cdcf0;
