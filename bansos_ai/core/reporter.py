@@ -107,21 +107,34 @@ class BansosAIReporter:
             t = res.target
             agent_badge = '<span class="badge badge-success">AGENT WORK ✅</span>' if res.is_agent_working else '<span class="badge badge-warning">ONLINE ⚠️</span>'
             key_html = f'<code>{t.api_key}</code> <button onclick="navigator.clipboard.writeText(\'{t.api_key}\')" class="btn-copy">Copy Key</button>' if t.api_key else '<span class="text-muted">No Direct Key (Free Reg)</span>'
-            models_tags = "".join([f'<span class="tag">{m}</span>' for m in res.supported_models]) or '<span class="text-muted">Standard LLM</span>'
             
+            # Rendering Status Per Model
+            model_status_tags = ""
+            if res.tested_models_status:
+                for m_name, is_ok in res.tested_models_status.items():
+                    m_cls = "tag-success" if is_ok else "tag-fail"
+                    m_icon = "✅" if is_ok else "❌"
+                    model_status_tags += f'<span class="tag {m_cls}">{m_name} {m_icon}</span>'
+            elif res.supported_models:
+                for m_name in res.supported_models[:6]:
+                    model_status_tags += f'<span class="tag">{m_name}</span>'
+            else:
+                model_status_tags = '<span class="text-muted">Standard LLM Endpoint</span>'
+
+
             cards_html += f"""
-            <div class="card">
+            <div class="card" data-source="{t.source}">
                 <div class="card-header">
                     <h3>#{idx} {t.base_url}</h3>
                     {agent_badge}
                 </div>
                 <div class="card-body">
                     <p><strong>Status:</strong> {res.status_message} ({res.latency_ms} ms)</p>
-                    <p><strong>Sumber:</strong> {t.source} | Keyword: <code>{t.matched_keyword or '-'}</code></p>
+                    <p><strong>Sumber:</strong> <span class="badge-source">{t.source}</span> | Keyword: <code>{t.matched_keyword or '-'}</code></p>
                     <p><strong>API Key:</strong> {key_html}</p>
                     <div class="models-container">
-                        <strong>Daftar Model:</strong>
-                        <div class="tags-wrapper">{models_tags}</div>
+                        <strong>Status Pengujian Model:</strong>
+                        <div class="tags-wrapper">{model_status_tags}</div>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -130,6 +143,7 @@ class BansosAIReporter:
                 </div>
             </div>
             """
+
 
         html_content = f"""<!DOCTYPE html>
 <html lang="id">
@@ -229,6 +243,25 @@ class BansosAIReporter:
             gap: 0.4rem;
             margin-top: 0.4rem;
         }}
+        .tag-success {{
+            background: #14532d !important;
+            color: #86efac !important;
+            border: 1px solid #22c55e;
+        }}
+        .tag-fail {{
+            background: #451a03 !important;
+            color: #fca5a5 !important;
+            border: 1px solid #ef4444;
+        }}
+        .badge-source {{
+            background: #1e1b4b;
+            color: #a5b4fc;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            border: 1px solid #4338ca;
+        }}
+
         .tag {{
             background: #092635;
             color: #9cdcf0;

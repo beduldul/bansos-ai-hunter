@@ -26,9 +26,12 @@ class ValidationResult(BaseModel):
     status_message: str = "Unchecked"
     latency_ms: float = 0.0
     supported_models: List[str] = Field(default_factory=list)
+    tested_models_status: Dict[str, bool] = Field(default_factory=dict)  # Status pengujian per-model (e.g. {'gpt-4o': True, 'claude-3-5-sonnet': True})
     available_quota: Optional[str] = None
     is_one_api_format: bool = False
     tested_at: str = Field(default_factory=lambda: datetime.now().isoformat())
+
+
 
 class ScanSummary(BaseModel):
     """Ringkasan akhir proses pemindaian dan pengujian."""

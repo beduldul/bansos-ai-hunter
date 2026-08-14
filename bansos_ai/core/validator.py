@@ -61,29 +61,41 @@ class BansosAIValidator:
                 result.status_message = f"Error: {type(e).__name__}"
                 return result
 
-            # Step 2: Tes Agent Completion (jika ada API Key atau endpoint terbuka)
+            # Step 2: Tes Agent Completion & Per-Model Workability
             if result.is_valid:
                 chat_url = f"{base_url}/v1/chat/completions"
-                # Pilih model uji coba (default: gpt-3.5-turbo, gpt-4o-mini, atau model pertama yang tersedia)
-                test_model = "gpt-4o-mini"
-                if result.supported_models:
-                    test_model = result.supported_models[0]
-                    
-                payload = {
-                    "model": test_model,
-                    "messages": [{"role": "user", "content": "HI"}],
-                    "max_tokens": 5
-                }
                 
-                try:
-                    chat_resp = await client.post(chat_url, json=payload)
-                    if chat_resp.status_code == 200:
-                        chat_data = chat_resp.json()
-                        if "choices" in chat_data and len(chat_data["choices"]) > 0:
-                            result.is_agent_working = True
-                            result.status_message = f"Agent WORK! Model: {test_model}"
-                except Exception:
-                    pass  # Tetap pertahankan status dari step 1 jika chat test gagal
+                # Daftar model yang akan diuji secara spesifik
+                models_to_test = []
+                if result.supported_models:
+                    models_to_test.extend([m for m in result.supported_models if any(tm in m.lower() for tm in ["gpt-4", "claude", "deepseek", "gemini", "o1", "qwen"])][:4])
+                if not models_to_test:
+                    models_to_test = ["gpt-4o-mini", "gpt-3.5-turbo"]
+
+                for test_m in models_to_test:
+                    payload = {
+                        "model": test_m,
+                        "messages": [{"role": "user", "content": "ping"}],
+                        "max_tokens": 5
+                    }
+                    try:
+                        chat_resp = await client.post(chat_url, json=payload)
+                        if chat_resp.status_code == 200:
+                            chat_data = chat_resp.json()
+                            if "choices" in chat_data and len(chat_data["choices"]) > 0:
+                                result.is_agent_working = True
+                                result.tested_models_status[test_m] = True
+                            else:
+                                result.tested_models_status[test_m] = False
+                        else:
+                            result.tested_models_status[test_m] = False
+                    except Exception:
+                        result.tested_models_status[test_m] = False
+
+                if result.is_agent_working:
+                    working_models = [m for m, ok in result.tested_models_status.items() if ok]
+                    result.status_message = f"Agent WORK! ({', '.join(working_models[:2])})"
+
 
             # Step 3: Cek Quota/Saldo (jika ada API key)
             if target.api_key and result.is_valid:
@@ -98,6 +110,7 @@ class BansosAIValidator:
                     pass
 
         return result
+
 
     async def validate_batch(self, targets: List[RelayTarget], max_concurrency: int = 10) -> List[ValidationResult]:
         """Menguji sekelompok target secara asinkron dengan batasan konkuensi."""
