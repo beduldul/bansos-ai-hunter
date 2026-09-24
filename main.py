@@ -17,7 +17,7 @@ from bansos_ai.utils.logger import logger, console
 
 async def run_scan(args):
     """Menjalankan alur kerja pemindaian lengkap (Scrape -> Validate -> Report)."""
-    console.print(f"[bold cyan]🚀 Memulai Bansos AI Hunter v{__version__}[/bold cyan]")
+    console.print(f"[bold cyan]Memulai Bansos AI Hunter v{__version__}[/bold cyan]")
     
     custom_kws = args.keywords.split(",") if args.keywords else None
     scraper = BansosAIScraper(max_results_per_query=args.limit)
@@ -29,7 +29,7 @@ async def run_scan(args):
     )
     
     if not targets:
-        logger.warning("❌ Tidak ada target relay yang ditemukan dari pemindaian web.")
+        logger.warning("Tidak ada target relay yang ditemukan dari pemindaian web.")
         return
 
     # Step 2: Validate
@@ -63,7 +63,7 @@ async def run_scan(args):
 
 async def run_direct_test(args):
     """Menjalankan pengujian langsung terhadap satu Base URL / API Key."""
-    console.print(f"[cyan]🧪 Menguji langsung endpoint:[/cyan] [bold]{args.url}[/bold]")
+    console.print(f"[cyan]Menguji langsung endpoint:[/cyan] [bold]{args.url}[/bold]")
     target = RelayTarget(
         url=args.url,
         base_url=args.url,

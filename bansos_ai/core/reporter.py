@@ -19,7 +19,7 @@ class BansosAIReporter:
     @staticmethod
     def display_terminal_table(results: List[ValidationResult]):
         """Menampilkan tabel hasil validasi di terminal menggunakan Rich Table."""
-        table = Table(title="✨ HASIL PEMINDAIAN BANSOS AI (RELAY ENDPOINT) ✨", show_lines=True)
+        table = Table(title="HASIL PEMINDAIAN BANSOS AI (RELAY ENDPOINT)", show_lines=True)
         
         table.add_column("No", style="dim", width=4)
         table.add_column("Base URL", style="cyan", no_wrap=True)
@@ -35,11 +35,11 @@ class BansosAIReporter:
             
             # Status styling
             if res.is_agent_working:
-                agent_status = "[bold green]WORK ✅[/bold green]"
+                agent_status = "[bold green]WORK[/bold green]"
             elif res.is_valid:
-                agent_status = "[yellow]ONLINE ⚠️[/yellow]"
+                agent_status = "[yellow]ONLINE[/yellow]"
             else:
-                agent_status = "[red]DEAD ❌[/red]"
+                agent_status = "[red]DEAD[/red]"
                 
             status_style = "green" if res.is_valid else "red"
             status_text = f"[{status_style}]{res.status_message}[/{status_style}]"
@@ -68,7 +68,7 @@ class BansosAIReporter:
         os.makedirs(os.path.dirname(os.path.abspath(filepath)), exist_ok=True)
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(json.dumps(summary.model_dump(), indent=2, ensure_ascii=False))
-        logger.info(f"💾 Laporan JSON berhasil disimpan di: [green]{filepath}[/green]")
+        logger.info(f"Laporan JSON berhasil disimpan di: [green]{filepath}[/green]")
 
     @staticmethod
     def export_csv(results: List[ValidationResult], filepath: str):
@@ -95,7 +95,7 @@ class BansosAIReporter:
                     "supported_models": "|".join(r.supported_models),
                     "title": r.target.title or ""
                 })
-        logger.info(f"💾 Laporan CSV berhasil disimpan di: [green]{filepath}[/green]")
+        logger.info(f"Laporan CSV berhasil disimpan di: [green]{filepath}[/green]")
 
     @staticmethod
     def generate_html_dashboard(summary: ScanSummary, filepath: str):
@@ -105,7 +105,7 @@ class BansosAIReporter:
         cards_html = ""
         for idx, res in enumerate(summary.valid_endpoints, start=1):
             t = res.target
-            agent_badge = '<span class="badge badge-success">AGENT WORK ✅</span>' if res.is_agent_working else '<span class="badge badge-warning">ONLINE ⚠️</span>'
+            agent_badge = '<span class="badge badge-success">AGENT WORK</span>' if res.is_agent_working else '<span class="badge badge-warning">ONLINE</span>'
             key_html = f'<code>{t.api_key}</code> <button onclick="navigator.clipboard.writeText(\'{t.api_key}\')" class="btn-copy">Copy Key</button>' if t.api_key else '<span class="text-muted">No Direct Key (Free Reg)</span>'
             
             # Rendering Status Per Model
@@ -113,7 +113,7 @@ class BansosAIReporter:
             if res.tested_models_status:
                 for m_name, is_ok in res.tested_models_status.items():
                     m_cls = "tag-success" if is_ok else "tag-fail"
-                    m_icon = "✅" if is_ok else "❌"
+                    m_icon = "OK" if is_ok else "FAIL"
                     model_status_tags += f'<span class="tag {m_cls}">{m_name} {m_icon}</span>'
             elif res.supported_models:
                 for m_name in res.supported_models[:6]:
@@ -291,7 +291,7 @@ class BansosAIReporter:
 </head>
 <body>
     <div class="header">
-        <h1>🚀 Dashboard Bansos AI & Relay Hunter</h1>
+        <h1>Dashboard Bansos AI &amp; Relay Hunter</h1>
         <p class="text-muted">Hasil pemindaian endpoint AI Proxy publik & pengujian status agen AI</p>
     </div>
 
@@ -322,4 +322,4 @@ class BansosAIReporter:
 """
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(html_content)
-        logger.info(f"🌐 Dashboard HTML interaktif berhasil dibuat di: [green]{filepath}[/green]")
+        logger.info(f"Dashboard HTML interaktif berhasil dibuat di: [green]{filepath}[/green]")

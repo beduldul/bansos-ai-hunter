@@ -68,7 +68,7 @@ class BansosAIScraper:
         targets: List[RelayTarget] = []
         for kw in keywords[:4]:  # Ambil kata kunci utama untuk tiap platform
             combined_query = f"{site_query} {kw}"
-            logger.info(f"📱 Memindai Postingan [bold yellow]{platform_name}[/bold yellow] dengan query: [cyan]'{combined_query}'[/cyan]")
+            logger.info(f"Memindai Postingan [bold yellow]{platform_name}[/bold yellow] dengan query: [cyan]'{combined_query}'[/cyan]")
             
             try:
                 ddgs = DDGS()
@@ -112,7 +112,7 @@ class BansosAIScraper:
                         matched_keyword=combined_query
                     ))
             except Exception as e:
-                logger.warning(f"⚠️ Gagal memindai {platform_name} query '{combined_query}': {e}")
+                logger.warning(f"Gagal memindai {platform_name} query '{combined_query}': {e}")
                 
         return targets
 
@@ -120,7 +120,7 @@ class BansosAIScraper:
     async def search_ddg(self, query: str) -> List[RelayTarget]:
         """Melakukan pencarian umum melalui DuckDuckGo Search."""
         targets: List[RelayTarget] = []
-        logger.info(f"🔎 Memindai Web Umum dengan query: [cyan]'{query}'[/cyan]")
+        logger.info(f"Memindai Web Umum dengan query: [cyan]'{query}'[/cyan]")
         
         try:
             ddgs = DDGS()
@@ -153,7 +153,7 @@ class BansosAIScraper:
                     matched_keyword=query
                 ))
         except Exception as e:
-            logger.warning(f"⚠️ Gagal memindai web query '{query}': {e}")
+            logger.warning(f"Gagal memindai web query '{query}': {e}")
             
         return targets
 
@@ -173,7 +173,7 @@ class BansosAIScraper:
         all_targets: List[RelayTarget] = []
         
         # 1. Menjalankan Pemindaian Platform Sosmed Secara Paralel (Asyncio Gather)
-        logger.info(f"⚡ Memulai pemindaian paralel M4 Pro untuk [bold cyan]{len(TARGET_SOCIAL_PLATFORMS)}[/bold cyan] platform sosmed & forum...")
+        logger.info(f"Memulai pemindaian paralel M4 Pro untuk [bold cyan]{len(TARGET_SOCIAL_PLATFORMS)}[/bold cyan] platform sosmed & forum...")
         social_tasks = [
             self.search_social_media(platform, site_q, keywords)
             for platform, site_q in TARGET_SOCIAL_PLATFORMS.items()
@@ -190,7 +190,7 @@ class BansosAIScraper:
             if isinstance(res, list):
                 all_targets.extend(res)
 
-        logger.info(f"✨ Total target postingan & relay unik berhasil dikumpulkan: [green]{len(all_targets)}[/green]")
+        logger.info(f"Total target postingan & relay unik berhasil dikumpulkan: [green]{len(all_targets)}[/green]")
         return all_targets
 
 

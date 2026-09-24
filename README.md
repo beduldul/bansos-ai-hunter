@@ -1,4 +1,4 @@
-# Bansos AI Hunter 🚀
+# Bansos AI Hunter
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
@@ -10,18 +10,18 @@ Perangkat ini dirancang khusus untuk memindai jejaring pencarian web dan forum t
 
 ---
 
-## 🌟 Fitur Utama
+## Fitur Utama
 
-- 🔍 **Multi-Source Harvester**: Pemindaian otomatis menggunakan kata kunci spesifik bahasa Mandarin (`AI中转站`, `免费额度`, `免费API`, `注册送额度`, `模型中转`, `大模型API`, `AI接口`, `余额`) dan bahasa Inggris/Indonesia.
-- ⚡ **Flagship AI Model Priority**: Mengutamakan pencarian dan validasi untuk model-model AI tingkat tertinggi (*flagship*), seperti **Claude 3.7 Sonnet, Claude 3.5 Sonnet, Claude Opus, GPT-4o, GPT-4.5, O1, O3-Mini, DeepSeek R1/V3, Gemini 2.0 Flash, Qwen Max, Fable**, dan model populer lainnya.
-- 🤖 **Agent Workability Test**: Tidak hanya mengecek status HTTP 200, tetapi melakukan *lightweight completion request* ke `/v1/chat/completions` untuk memastikan agen AI dapat memproses pesan secara aktual.
-- ⏱️ **Real-Time Latency & Quota Checker**: Mengukur kecepatan respon dalam milidetik (ms) dan mengekstrak sisa saldo/kuota gratis yang tersedia pada endpoint terkait.
-- 🛡️ **Spam & Referral Filter**: Penyaringan otomatis terhadap tautan referral tanpa kuota dan domain yang terdaftar dalam *blacklist*.
-- 📊 **Multi-Format Reporting**: Menyajikan tabel interaktif berwarna di terminal (`rich`), serta mengekspor hasil pemindaian ke format **JSON**, **CSV**, dan **Dashboard HTML Interaktif**.
+- **Multi-Source Harvester**: Pemindaian otomatis menggunakan kata kunci spesifik bahasa Mandarin (`AI中转站`, `免费额度`, `免费API`, `注册送额度`, `模型中转`, `大模型API`, `AI接口`, `余额`) dan bahasa Inggris/Indonesia.
+- **Flagship AI Model Priority**: Mengutamakan pencarian dan validasi untuk model-model AI tingkat tertinggi (*flagship*), seperti **Claude 3.7 Sonnet, Claude 3.5 Sonnet, Claude Opus, GPT-4o, GPT-4.5, O1, O3-Mini, DeepSeek R1/V3, Gemini 2.0 Flash, Qwen Max, Fable**, dan model populer lainnya.
+- **Agent Workability Test**: Tidak hanya mengecek status HTTP 200, tetapi melakukan *lightweight completion request* ke `/v1/chat/completions` untuk memastikan agen AI dapat memproses pesan secara aktual.
+- **Real-Time Latency & Quota Checker**: Mengukur kecepatan respon dalam milidetik (ms) dan mengekstrak sisa saldo/kuota gratis yang tersedia pada endpoint terkait.
+- **Spam & Referral Filter**: Penyaringan otomatis terhadap tautan referral tanpa kuota dan domain yang terdaftar dalam *blacklist*.
+- **Multi-Format Reporting**: Menyajikan tabel interaktif berwarna di terminal (`rich`), serta mengekspor hasil pemindaian ke format **JSON**, **CSV**, dan **Dashboard HTML Interaktif**.
 
 ---
 
-## 🛠️ Instalasi
+## Instalasi
 
 ### Persyaratan Sistem
 - Python 3.10 atau versi yang lebih baru
@@ -42,7 +42,7 @@ Perangkat ini dirancang khusus untuk memindai jejaring pencarian web dan forum t
 
 ---
 
-## 🚀 Panduan Penggunaan
+## Panduan Penggunaan
 
 ### 1. Memulai Pemindaian Otomatis (*Scan Mode*)
 Jalankan pemindaian otomatis ke berbagai sumber web:
@@ -75,7 +75,7 @@ python3 main.py scan test --url "https://api.example-relay.com" --key "sk-xxxxxx
 
 ---
 
-## 📂 Struktur Proyek
+## Struktur Proyek
 
 ```
 bansos-ai-hunter/
@@ -103,13 +103,13 @@ bansos-ai-hunter/
 
 ---
 
-## 🖥️ Tampilan Dashboard HTML
+## Tampilan Dashboard HTML
 
 Setelah pemindaian selesai dengan opsi `--format html` atau `all`, dokumen dashboard interaktif akan dibuat pada `output_reports/bansos_dashboard.html`. Anda dapat membedahnya melalui peramban web untuk menyalin (*copy*) Base URL dan API Key dalam satu klik.
 
 ---
 
-## 🤝 Kontribusi
+## Kontribusi
 
 Kontribusi dari komunitas sangat diapresiasi. Apabila Anda ingin menambahkan fitur baru, memperbaiki bug, atau memperbarui daftar kata kunci:
 
@@ -121,7 +121,7 @@ Kontribusi dari komunitas sangat diapresiasi. Apabila Anda ingin menambahkan fit
 
 ---
 
-## 📜 Lisensi
+## Lisensi
 
 Proyek ini dilisensikan di bawah [Lisensi MIT](LICENSE).
 

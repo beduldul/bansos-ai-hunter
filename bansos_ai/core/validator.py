@@ -120,12 +120,12 @@ class BansosAIValidator:
             async with semaphore:
                 return await self.validate_target(target)
                 
-        logger.info(f"⚡ Memulai pengujian otomatis pada [cyan]{len(targets)}[/cyan] target endpoint...")
+        logger.info(f"Memulai pengujian otomatis pada [cyan]{len(targets)}[/cyan] target endpoint...")
         tasks = [sem_validate(t) for t in targets]
         results = await asyncio.gather(*tasks)
         
         valid_count = sum(1 for r in results if r.is_valid)
         agent_count = sum(1 for r in results if r.is_agent_working)
         
-        logger.info(f"✅ Pengujian selesai: [green]{valid_count} Endpoint Valid[/green] | [bold green]{agent_count} Agent Siap Pakai[/bold green]")
+        logger.info(f"Pengujian selesai: [green]{valid_count} Endpoint Valid[/green] | [bold green]{agent_count} Agent Siap Pakai[/bold green]")
         return results
