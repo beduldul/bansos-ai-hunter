@@ -12,12 +12,12 @@ Perangkat ini dirancang khusus untuk memindai jejaring pencarian web dan forum t
 
 ## Fitur Utama
 
-- **Multi-Source Harvester**: Pemindaian otomatis menggunakan kata kunci spesifik bahasa Mandarin (`AI中转站`, `免费额度`, `免费API`, `注册送额度`, `模型中转`, `大模型API`, `AI接口`, `余额`) dan bahasa Inggris/Indonesia.
-- **Flagship AI Model Priority**: Mengutamakan pencarian dan validasi untuk model-model AI tingkat tertinggi (*flagship*), seperti **Claude 3.7 Sonnet, Claude 3.5 Sonnet, Claude Opus, GPT-4o, GPT-4.5, O1, O3-Mini, DeepSeek R1/V3, Gemini 2.0 Flash, Qwen Max, Fable**, dan model populer lainnya.
-- **Agent Workability Test**: Tidak hanya mengecek status HTTP 200, tetapi melakukan *lightweight completion request* ke `/v1/chat/completions` untuk memastikan agen AI dapat memproses pesan secara aktual.
-- **Real-Time Latency & Quota Checker**: Mengukur kecepatan respon dalam milidetik (ms) dan mengekstrak sisa saldo/kuota gratis yang tersedia pada endpoint terkait.
-- **Spam & Referral Filter**: Penyaringan otomatis terhadap tautan referral tanpa kuota dan domain yang terdaftar dalam *blacklist*.
-- **Multi-Format Reporting**: Menyajikan tabel interaktif berwarna di terminal (`rich`), serta mengekspor hasil pemindaian ke format **JSON**, **CSV**, dan **Dashboard HTML Interaktif**.
+- **Multi-Source Harvester** — pemindaian otomatis menggunakan kata kunci spesifik bahasa Mandarin (`AI中转站`, `免费额度`, `免费API`, `注册送额度`, `模型中转`, `大模型API`, `AI接口`, `余额`) dan bahasa Inggris/Indonesia.
+- **Flagship AI Model Priority** — mengutamakan pencarian dan validasi untuk model-model AI tingkat tertinggi (*flagship*), seperti **Claude 3.7 Sonnet, Claude 3.5 Sonnet, Claude Opus, GPT-4o, GPT-4.5, O1, O3-Mini, DeepSeek R1/V3, Gemini 2.0 Flash, Qwen Max, Fable**, dan model populer lainnya.
+- **Agent Workability Test** — tidak hanya mengecek status HTTP 200, tetapi melakukan *lightweight completion request* ke `/v1/chat/completions` untuk memastikan agen AI dapat memproses pesan secara aktual.
+- **Real-Time Latency & Quota Checker** — mengukur kecepatan respon dalam milidetik (ms) dan mengekstrak sisa saldo/kuota gratis yang tersedia pada endpoint terkait.
+- **Spam & Referral Filter** — penyaringan otomatis terhadap tautan referral tanpa kuota dan domain yang terdaftar dalam *blacklist*.
+- **Multi-Format Reporting** — menyajikan tabel interaktif berwarna di terminal (`rich`), serta mengekspor hasil pemindaian ke format **JSON**, **CSV**, dan **Dashboard HTML Interaktif**.
 
 ---
 
@@ -51,18 +51,18 @@ python3 main.py scan
 ```
 
 #### Opsi PemindaianTambahan:
-- **Pengaturan Format Output**:
+- **Pengaturan Format Output** —
   ```bash
   python3 main.py scan --format html
   ```
   *(Pilihan format: `table`, `html`, `json`, `csv`, `all`)*
 
-- **Pengaturan Kata Kunci Kustom**:
+- **Pengaturan Kata Kunci Kustom** —
   ```bash
   python3 main.py scan --keywords "Claude 3.5 Sonnet free relay,DeepSeek R1 free api"
   ```
 
-- **Mengatur Concurrency & Timeout**:
+- **Mengatur Concurrency & Timeout** —
   ```bash
   python3 main.py scan --concurrency 20 --timeout 5.0
   ```
