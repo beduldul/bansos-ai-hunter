@@ -2,7 +2,6 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
-[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 **Bansos AI Hunter** adalah perangkat lunak pemindai (*scraper*) dan penguji (*validator*) otomatis sumber terbuka (*open-source*) untuk menemukan **AI Proxy / Relay Station ("AI中转站")**, penyedia kuota API gratisan, serta kunci API publik (*OpenAI-Compatible Endpoints*) secara real-time.
 
